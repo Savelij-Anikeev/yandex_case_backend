@@ -1,12 +1,19 @@
 from django.shortcuts import get_object_or_404
 from django.db.models import F
+from django.contrib.auth.models import Group
 
-from rest_framework import viewsets
+from django.db import models
+from django.dispatch import receiver
+from django.contrib.auth.models import User
+
+from rest_framework.response import Response
+from rest_framework import viewsets, generics
 from rest_framework.permissions import SAFE_METHODS, IsAdminUser
-from common_api_app.permissions import IsOwnerOrStaff
+from common_api_app.permissions import IsOwnerOrStaff, IsInstitutionWorkerOrStaff
 
 from .serializers import (EventSerializer, UserEventRelationsSerializer, 
-                        CategorySerializer, EventCategoryRelationsSerializer)
+                        CategorySerializer, EventCategoryRelationsSerializer, 
+                        UserSerializer, GroupSerialzier)
 from .models import Event, UserEventRelations, Category, EventCategoryRelations
 
 
@@ -128,12 +135,27 @@ class EventCategoryRelationsAPIView(viewsets.ModelViewSet):
         return [permission() for permission in self.permission_classes]
     
 
-
-
-
-
-
-
-
-
+class SetUserGroup(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsInstitutionWorkerOrStaff,)
     
+
+class GroupListAPIView(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerialzier
+
+
+# checking when user models gets new instance and giving it student group
+@receiver(models.signals.post_save, sender=User)
+def post_save_user_signal_handler(sender, instance, created, **kwargs):
+    if created:
+       group = Group.objects.get(name='students')
+       instance.groups.add(group)
+       instance.save()
+
+
+
+
+
+
