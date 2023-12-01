@@ -17,3 +17,12 @@ class Event(models.Model):
 
     def __str__(self) -> str:
         return f'id: {self.id} event: {self.name}'
+
+
+class UserEventRelations(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_event_rel_user')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.id
+
