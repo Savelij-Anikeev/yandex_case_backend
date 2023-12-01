@@ -28,3 +28,9 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
+
+
+class EventCategoryRelationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventCategoryRelations
+        fields = '__all__'
