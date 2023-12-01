@@ -1,6 +1,9 @@
 from django.urls import reverse
+from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from rest_framework import serializers
+from django.contrib.auth.models import Group
+
 
 from .models import Event, UserEventRelations, Category, EventCategoryRelations
 
@@ -33,4 +36,16 @@ class CategorySerializer(serializers.ModelSerializer):
 class EventCategoryRelationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventCategoryRelations
+        fields = '__all__'
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+
+class GroupSerialzier(serializers.ModelSerializer):
+    class Meta:
+        model = Group
         fields = '__all__'
