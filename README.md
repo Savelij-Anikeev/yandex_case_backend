@@ -10,7 +10,7 @@ headers: `Authorization: Token 'token'`.
         auth/token/login/ - (METHODS: POST) send `username` and `password` to login and get token
         auth/token/logout/ - (METHODS: GET) empty requiest to logout
 
-3) api:
+2) api:
 
         api/v1/groups/ - (METHODS: GET) получить список всех групп (они выступают как роли)
         api/v1/groups/user/<user_id>/ - (METHODS: GET, PATH, PUT) установить группу у пользователя с id = <user_id>
@@ -28,7 +28,12 @@ headers: `Authorization: Token 'token'`.
         ////api/v1/event-category-rel/ - (METHODS: GET, POST) - create or get all relations
         ////api/v1/event-category-rel/<id>/ - (METHODS: GET, POST) -
         ////
-         
+   
+3) zapusk:
+        хз как на винде, но у меня так:
+           sudo docker compose build
+           sudo docker compose up
+           работает на 127.0.0.0:8000   
 
 
 
