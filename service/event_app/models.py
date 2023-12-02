@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+import PIL
 
 class Event(models.Model):
     name = models.CharField(max_length=128)
@@ -21,6 +21,8 @@ class Event(models.Model):
 
     places = models.PositiveIntegerField(default=0)
     free_places = models.PositiveIntegerField(default=0)
+
+    photo = models.CharField(max_length=1024, default=None, null=True)
 
     def __str__(self) -> str:
         return f'id: {self.id} event: {self.name}'
