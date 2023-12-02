@@ -49,3 +49,9 @@ class GroupSerialzier(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = '__all__'
+
+
+class AddEventNonAuthSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = '__all__'
