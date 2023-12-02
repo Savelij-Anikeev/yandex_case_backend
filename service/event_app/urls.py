@@ -2,7 +2,8 @@ from django.urls import path
 from rest_framework import routers
 
 from .views import (EventAPIView, UserEventRelationsAPIView, CategoryAPIView, 
-                    EventCategoryRelationsAPIView, SetUserGroup, GroupListAPIView, VerifyEventAPIView)
+                    EventCategoryRelationsAPIView, SetUserGroup, 
+                    GroupListAPIView, VerifyEventAPIView, AddEventNonAuthAPIView)
 
 router = routers.SimpleRouter()
 router.register('events', EventAPIView)
@@ -19,4 +20,5 @@ urlpatterns += [
     path('groups/', GroupListAPIView.as_view()),
     path('groups/user/<int:pk>/', SetUserGroup.as_view()),
     path('verify/event/<int:pk>/', VerifyEventAPIView.as_view()),
+    path('add-event-non-auth/', AddEventNonAuthAPIView.as_view())
 ]

@@ -5,14 +5,14 @@ import PIL
 class Event(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=512, blank=True, null=True)
-    place = models.CharField(max_length=128)
+    place = models.CharField(max_length=128, blank=True, null=True)
     date_start = models.CharField(max_length=128)
     time_start = models.CharField(max_length=5)
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now_add=True)
 
-    organizer = models.ForeignKey(User, on_delete=models.PROTECT)
+    organizer = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
     category = models.ManyToManyField('Category', through='EventCategoryRelations')
 
     is_verified = models.BooleanField(default=False)
@@ -23,6 +23,12 @@ class Event(models.Model):
     free_places = models.PositiveIntegerField(default=0)
 
     photo = models.CharField(max_length=1024, default=None, null=True)
+
+
+    organizer_fio = models.CharField(max_length=128, null=True, blank=True)
+    organizer_phone = models.CharField(max_length=12, null=True, blank=True)
+    organizer_socials = models.CharField(max_length=256, null=True, blank=True)
+    event_type = models.CharField(max_length=128, null=True, blank=True)
 
     def __str__(self) -> str:
         return f'id: {self.id} event: {self.name}'

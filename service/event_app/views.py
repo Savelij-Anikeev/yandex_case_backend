@@ -13,7 +13,7 @@ from common_api_app.permissions import IsOwnerOrStaff, IsInstitutionWorkerOrStaf
 
 from .serializers import (EventSerializer, UserEventRelationsSerializer, 
                         CategorySerializer, EventCategoryRelationsSerializer, 
-                        UserSerializer, GroupSerialzier)
+                        UserSerializer, GroupSerialzier, AddEventNonAuthSerializer)
 from .models import Event, UserEventRelations, Category, EventCategoryRelations
 
 
@@ -33,7 +33,9 @@ class EventAPIView(viewsets.ModelViewSet):
         if 'verified' in self.request.GET.keys():
             """is verified"""
             if self.request.GET.get('verified') == 'false':
-                qs =  Event.objects.all()        
+                qs =  Event.objects.filter(is_verified=False)   
+            if self.request.GET.get('verified') == 'all':
+                qs =  Event.objects.all() 
         else:
             qs = Event.objects.filter(is_verified=True)
         return qs
@@ -170,6 +172,10 @@ class VerifyEventAPIView(generics.RetrieveUpdateAPIView):
         serializer.validated_data['is_verified'] = self.request.data.get('is_verified')
         serializer.save()
 
+
+class AddEventNonAuthAPIView(generics.CreateAPIView):
+    queryset = Event.objects.all()
+    serializer_class = AddEventNonAuthSerializer
 
 # checking when user models gets new instance and giving it student group
 @receiver(models.signals.post_save, sender=User)
