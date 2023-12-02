@@ -25,6 +25,19 @@ class EventAPIView(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     permission_classes = ()
 
+    def get_queryset(self):
+        """
+            custom queryset
+            get params: verified=(bool)
+        """
+        if 'verified' in self.request.GET.keys():
+            """is verified"""
+            if self.request.GET.get('verified') == 'false':
+                qs =  Event.objects.all()        
+        else:
+            qs = Event.objects.filter(is_verified=True)
+        return qs
+
     def get_permissions(self):
         """
             non organizer doesn1t have right to  use
@@ -144,6 +157,18 @@ class SetUserGroup(generics.RetrieveUpdateAPIView):
 class GroupListAPIView(generics.ListAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupSerialzier
+
+
+class VerifyEventAPIView(generics.RetrieveUpdateAPIView):
+    """verify events"""
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    permission_classes = (IsInstitutionWorkerOrStaff,)
+
+    def perform_update(self, serializer):
+        """change field"""
+        serializer.validated_data['is_verified'] = self.request.data.get('is_verified')
+        serializer.save()
 
 
 # checking when user models gets new instance and giving it student group
