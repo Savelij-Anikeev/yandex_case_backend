@@ -58,14 +58,6 @@ class GroupSerialzier(serializers.ModelSerializer):
 
 
 class AddEventNonAuthSerializer(serializers.ModelSerializer):
-    photo = serializers.SerializerMethodField('get_image_url')
-
     class Meta:
         model = Event
-        fields = ('name', 'description', 'place', 'date_start', 'time_start', 'date_created', 'date_updated', 'organizer', 
-                  'category', 'is_verified', 'cost', 'places', 'free_places', 'photo', 'organizer_fio', 'organizer_phone',
-                  'organizer_socials', 'event_type')
-        
-    def get_image_url(self, obj):
-        return obj.photo.url
-    
+        fields = '__all__'    

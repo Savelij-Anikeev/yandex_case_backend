@@ -184,22 +184,18 @@ class AddEventNonAuthAPIView(generics.ListCreateAPIView):
     serializer_class = AddEventNonAuthSerializer
 
     def perform_create(self, serializer):
-        img_file = self.request.FILES.get('photo')
-        strg = Storage()
-        img_url = strg.load_object_and_get_link(img_file)
         serializer.validated_data['organizer'] = None
-        obj = serializer.save()
-        # obj.photo.url = img_url
-        # obj.save()
+        serializer.save()
+
 
 
 # checking when user models gets new instance and giving it student group
-@receiver(models.signals.post_save, sender=User)
-def post_save_user_signal_handler(sender, instance, created, **kwargs):
-    if created:
-       group = Group.objects.get(name='students')
-       instance.groups.add(group)
-       instance.save()
+# @receiver(models.signals.post_save, sender=User)
+# def post_save_user_signal_handler(sender, instance, created, **kwargs):
+#     if created:
+#        group = Group.objects.get(name='students')
+#        instance.groups.add(group)
+#        instance.save()
 
 
 
