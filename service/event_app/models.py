@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 import PIL
+from .storage import Storage
+
+
+def upload_to(instance, filename):
+    return '/'.join(['images', str(instance.name), filename])
+
 
 class Event(models.Model):
     name = models.CharField(max_length=128)
@@ -22,7 +28,8 @@ class Event(models.Model):
     places = models.PositiveIntegerField(default=0)
     free_places = models.PositiveIntegerField(default=0)
 
-    photo = models.CharField(max_length=1024, default=None, null=True)
+    # photo = models.CharField(max_length=1024, default=None, null=True)
+    photo = models.ImageField(upload_to=upload_to, null=True, blank=True)
 
 
     organizer_fio = models.CharField(max_length=128, null=True, blank=True)
