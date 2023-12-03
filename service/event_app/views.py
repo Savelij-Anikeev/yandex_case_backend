@@ -16,6 +16,9 @@ from .serializers import (EventSerializer, UserEventRelationsSerializer,
                         UserSerializer, GroupSerialzier, AddEventNonAuthSerializer)
 from .models import Event, UserEventRelations, Category, EventCategoryRelations
 
+from .storage import Storage
+
+
 
 class EventAPIView(viewsets.ModelViewSet):
     """
@@ -36,6 +39,8 @@ class EventAPIView(viewsets.ModelViewSet):
                 qs =  Event.objects.filter(is_verified=False)   
             if self.request.GET.get('verified') == 'all':
                 qs =  Event.objects.all() 
+            else:
+                qs = Event.objects.all()
         else:
             qs = Event.objects.filter(is_verified=True)
         return qs
@@ -54,6 +59,7 @@ class EventAPIView(viewsets.ModelViewSet):
         serializer.validated_data['organizer'] = self.request.user
         serializer.validated_data['free_places'] = serializer.validated_data['places']
         serializer.save()
+
 
 
 class UserEventRelationsAPIView(viewsets.ModelViewSet):
@@ -173,9 +179,19 @@ class VerifyEventAPIView(generics.RetrieveUpdateAPIView):
         serializer.save()
 
 
-class AddEventNonAuthAPIView(generics.CreateAPIView):
+class AddEventNonAuthAPIView(generics.ListCreateAPIView):
     queryset = Event.objects.all()
     serializer_class = AddEventNonAuthSerializer
+
+    def perform_create(self, serializer):
+        img_file = self.request.FILES.get('photo')
+        strg = Storage()
+        img_url = strg.load_object_and_get_link(img_file)
+        serializer.validated_data['organizer'] = None
+        obj = serializer.save()
+        # obj.photo.url = img_url
+        # obj.save()
+
 
 # checking when user models gets new instance and giving it student group
 @receiver(models.signals.post_save, sender=User)

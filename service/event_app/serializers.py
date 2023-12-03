@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from rest_framework import serializers
 from django.contrib.auth.models import Group
-
+from .storage import Storage
 
 from .models import Event, UserEventRelations, Category, EventCategoryRelations
 
@@ -11,12 +11,16 @@ from .models import Event, UserEventRelations, Category, EventCategoryRelations
 class EventSerializer(serializers.ModelSerializer):
     organizer = serializers.StringRelatedField()
     organizer_id = serializers.IntegerField(read_only=True)
+    photo = serializers.SerializerMethodField('get_image_url')
 
     class Meta:
         model = Event
         fields = '__all__'
         read_only_fields = ('id', 'organizer', 'organizer_id', 'organizer_url', 'date_created', 
                             'date_updated', 'is_verified', 'free_places',)
+
+    def get_image_url(self, obj):
+        return obj.photo.url
         
 
 class UserEventRelationsSerializer(serializers.ModelSerializer):
@@ -34,6 +38,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class EventCategoryRelationsSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField('get_image_url')
+
     class Meta:
         model = EventCategoryRelations
         fields = '__all__'
@@ -52,6 +58,14 @@ class GroupSerialzier(serializers.ModelSerializer):
 
 
 class AddEventNonAuthSerializer(serializers.ModelSerializer):
+    photo = serializers.SerializerMethodField('get_image_url')
+
     class Meta:
         model = Event
-        fields = '__all__'
+        fields = ('name', 'description', 'place', 'date_start', 'time_start', 'date_created', 'date_updated', 'organizer', 
+                  'category', 'is_verified', 'cost', 'places', 'free_places', 'photo', 'organizer_fio', 'organizer_phone',
+                  'organizer_socials', 'event_type')
+        
+    def get_image_url(self, obj):
+        return obj.photo.url
+    

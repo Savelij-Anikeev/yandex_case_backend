@@ -10,6 +10,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['158.160.129.2', '127.0.0.1']
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/' # 'http://myhost:port/media/'
 
 INSTALLED_APPS = [
     'django.contrib.sites',
